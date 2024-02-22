@@ -28,13 +28,8 @@ const AddEmployee = ({ save }) => {
 
   return (
     <>
-      <Button
-        onClick={handleShow}
-        variant="dark"
-        className="rounded-pill px-0"
-        style={{ width: "38px" }}
-      >
-        <i className="bi bi-plus"></i>
+      <Button onClick={handleShow} variant="dark" className="rounded-pill ">
+        Add Employee <i className="bi ml-2 bi-plus"></i>
       </Button>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>

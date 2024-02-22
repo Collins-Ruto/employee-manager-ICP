@@ -30,10 +30,10 @@ const Attendance = ({ attendance, checkout }) => {
             onClick={() => checkout(id)}
             disabled={checkOutTime.length > 0}
             variant="dark"
-            className="rounded-pill"
+            className="btn btn-outline-info w-100 py-3 mb-3"
             // style={{ width: "38px" }}
           >
-            Check Out <i className="bi bi-pencil-square"></i>
+            Check Out <i className="bi bi-clipboard-check"></i>
           </Button>
         </Card.Body>
       </Card>

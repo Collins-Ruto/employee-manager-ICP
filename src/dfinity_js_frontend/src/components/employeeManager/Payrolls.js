@@ -33,15 +33,15 @@ const Payrolls = ({ employeeId }) => {
             <h1 className="fs-4 fw-bold mb-0">Payrolls</h1>
             <Link
               to="/"
-              className="justify-content-start mr-4 py-2 px-3 my-2 bg-secondary text-white rounded-pill "
+              className="justify-content-start text-decoration-none mr-4 py-2 px-3 my-2 bg-secondary text-white "
             >
               Employees Page
             </Link>
             <Link
               to="/attendances"
-              className="justify-content-start py-2 px-3 my-2 bg-secondary text-white rounded-pill "
+              className="justify-content-start text-decoration-none py-2 px-3 my-2 bg-secondary text-white "
             >
-              Attendances Manager
+              Attendances Page
             </Link>
           </div>
           <Row xs={1} sm={2} lg={3} className="g-3  mb-5 g-xl-4 g-xxl-5">

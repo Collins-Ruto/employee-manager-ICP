@@ -55,7 +55,7 @@ const Attendances = () => {
             <h1 className="fs-4 fw-bold mb-0">Attendances Manager</h1>
             <Link
               to="/"
-              className="justify-content-start mr-4 py-2 px-3 my-2 bg-secondary text-white rounded-pill "
+              className="justify-content-start mr-4 py-2 px-3 my-2 bg-secondary text-white "
             >
               Employees Page
             </Link>

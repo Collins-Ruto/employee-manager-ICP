@@ -22,8 +22,7 @@ const UpdateEmployee = ({ employee, save }) => {
     <>
       <Button
         onClick={handleShow}
-        variant="dark"
-        className="rounded-pill"
+        className="rounded-pill btn btn-primary"
         // style={{ width: "38px" }}
       >
         Update <i className="bi bi-pencil-square"></i>
@@ -56,7 +55,7 @@ const UpdateEmployee = ({ employee, save }) => {
               className="mb-3"
             >
               <Form.Control
-                type="text"
+                type="number"
                 placeholder="Phone"
                 onChange={(e) => {
                   setPhone(e.target.value);
@@ -126,6 +125,7 @@ const UpdateEmployee = ({ employee, save }) => {
             disabled={!isFormFilled()}
             onClick={() => {
               save({
+                id: employee.id,
                 email,
                 phone,
                 address,

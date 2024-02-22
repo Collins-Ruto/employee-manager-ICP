@@ -19,11 +19,10 @@ const AddPayroll = ({ employee, save }) => {
     <>
       <Button
         onClick={handleShow}
-        variant="dark"
-        className="rounded-pill"
+        className="rounded-pill btn btn-primary"
         // style={{ width: "38px" }}
       >
-        Pay <i className="bi bi-pencil-square"></i>
+        Pay Employee <i className="bi bi-credit-card"></i>
       </Button>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>

@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import AddEmployee from "./AddEmployee";
 import Employee from "./Employee";
 import Loader from "../utils/Loader";
-import { Row } from "react-bootstrap";
+import { Row, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import { NotificationSuccess, NotificationError } from "../utils/Notifications";
@@ -18,6 +18,7 @@ import { checkinAttendance } from "../../utils/attendanceManager";
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
 
   // function to get the list of employees
   const getEmployees = useCallback(async () => {
@@ -95,6 +96,22 @@ const Employees = () => {
     }
   };
 
+  // function to filter the employees name, designation, department based on the search input
+  const filterEmployees = () => {
+    // if search is empty, set the employees to the original list
+    if (search === "") {
+      getEmployees();
+      return;
+    }
+    const filteredEmployees = employees.filter(
+      (employee) =>
+        employee.name.toLowerCase().includes(search.toLowerCase()) ||
+        employee.designation.toLowerCase().includes(search.toLowerCase()) ||
+        employee.department.toLowerCase().includes(search.toLowerCase())
+    );
+    setEmployees(filteredEmployees);
+  };
+
   useEffect(() => {
     getEmployees();
   }, []);
@@ -105,14 +122,34 @@ const Employees = () => {
         <>
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h1 className="fs-4 fw-bold mb-0">Employees</h1>
+            <div className="input-group" style={{ width: "30%" }}>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by name, designation, department"
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+              />
+              <div className="input-group-append">
+                <Button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => {
+                    filterEmployees();
+                  }}
+                >
+                  <i className="bi bi-search"></i>
+                </Button>
+              </div>
+            </div>
             <Link
               to="/attendances"
-              className="justify-content-start py-2 px-3 my-2 bg-secondary text-white rounded-pill "
+              className="justify-content-start text-decoration-none py-2 px-3 my-2 bg-secondary text-white "
             >
-              Attendances Manager
+              Attendances Page
             </Link>
             <div className="d-flex align-items-center">
-              <div className="mr-6">Add Employee</div>
               <AddEmployee save={addEmployee} />
             </div>
           </div>
