@@ -1,0 +1,19 @@
+service: () -> {
+    addAttendance: (record {date:text; employeeId:text}) -> (variant {Ok:record {id:text; employeeName:text; date:text; checkInTime:text; employeeId:text; checkOutTime:opt text}; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
+    addEmployee: (record {salary:nat64; name:text; designation:text; email:text; address:text; phone:text; department:text}) -> (variant {Ok:record {id:text; salary:nat64; hireDate:text; name:text; designation:text; email:text; address:text; phone:text; department:text}; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
+    addPayroll: (record {month:text; year:nat64; netSalary:nat64; employeeId:text; allowances:nat64; basicSalary:nat64}) -> (variant {Ok:record {id:text; month:text; employeeName:text; year:nat64; netSalary:nat64; employeeId:text; allowances:nat64; basicSalary:nat64}; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
+    getAllAttendances: () -> (vec record {id:text; date:text; checkInTime:text; employeeId:text; checkOutTime:opt text}) query;
+    getAllPayrolls: () -> (vec record {id:text; month:text; year:nat64; netSalary:nat64; employeeId:text; allowances:nat64; basicSalary:nat64}) query;
+    getAttendance: (text) -> (variant {Ok:record {id:text; date:text; checkInTime:text; employeeId:text; checkOutTime:opt text}; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}}) query;
+    getAttendanceByDate: (text) -> (record {id:text; date:text; checkInTime:text; employeeId:text; checkOutTime:opt text}) query;
+    getEmployee: (text) -> (variant {Ok:record {id:text; salary:nat64; hireDate:text; name:text; designation:text; email:text; address:text; phone:text; department:text}; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}}) query;
+    getEmployeeAnalysis: (text) -> (variant {Ok:record {employeeName:text; presentDays:text; totalDays:text; absentDays:text}; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}}) query;
+    getEmployeeAttendances: (text) -> (vec record {id:text; employeeName:text; date:text; checkInTime:text; employeeId:text; checkOutTime:opt text}) query;
+    getEmployeePayrolls: (text) -> (vec record {id:text; month:text; year:nat64; netSalary:nat64; employeeId:text; allowances:nat64; basicSalary:nat64}) query;
+    getEmployees: () -> (vec record {id:text; salary:nat64; hireDate:text; name:text; designation:text; email:text; address:text; phone:text; department:text}) query;
+    getMonthPayrolls: (text) -> (vec record {id:text; month:text; year:nat64; netSalary:nat64; employeeId:text; allowances:nat64; basicSalary:nat64}) query;
+    getPayroll: (text) -> (variant {Ok:record {id:text; month:text; year:nat64; netSalary:nat64; employeeId:text; allowances:nat64; basicSalary:nat64}; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}}) query;
+    getYearPayrolls: (nat64) -> (vec record {id:text; month:text; year:nat64; netSalary:nat64; employeeId:text; allowances:nat64; basicSalary:nat64}) query;
+    searchEmployee: (text) -> (vec record {id:text; salary:nat64; hireDate:text; name:text; designation:text; email:text; address:text; phone:text; department:text}) query;
+    updateEmployee: (record {id:text; salary:nat64; designation:text; email:text; address:text; phone:text; department:text}) -> (variant {Ok:record {id:text; salary:nat64; hireDate:text; name:text; designation:text; email:text; address:text; phone:text; department:text}; Err:variant {PaymentFailed:text; InvalidPayload:text; NotFound:text; PaymentCompleted:text}});
+}
