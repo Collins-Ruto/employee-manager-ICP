@@ -9,6 +9,7 @@ import {
   Ok,
   Err,
   Opt,
+  Some,
   None,
   nat64,
   Result,
@@ -27,6 +28,7 @@ const Employee = Record({
   name: text,
   email: text,
   phone: text,
+  profileImg: text,
   address: text,
   department: text,
   designation: text,
@@ -39,6 +41,7 @@ const EmployeePayload = Record({
   name: text,
   email: text,
   phone: text,
+  profileImg: text,
   address: text,
   department: text,
   designation: text,
@@ -60,8 +63,9 @@ const UpdateEmployeePayload = Record({
 const Payroll = Record({
   id: text,
   employeeId: text,
+  date: text,
   month: text,
-  year: nat64,
+  year: text,
   basicSalary: nat64,
   allowances: nat64,
   netSalary: nat64,
@@ -70,11 +74,8 @@ const Payroll = Record({
 // Record structure representing Add Payroll Details
 const PayrollPayload = Record({
   employeeId: text,
-  month: text,
-  year: nat64,
   basicSalary: nat64,
   allowances: nat64,
-  netSalary: nat64,
 });
 
 // Structure representing a payslip
@@ -82,8 +83,9 @@ const Payslip = Record({
   id: text,
   employeeId: text,
   employeeName: text,
+  date: text,
   month: text,
-  year: nat64,
+  year: text,
   basicSalary: nat64,
   allowances: nat64,
   netSalary: nat64,
@@ -232,7 +234,7 @@ export default Canister({
     const attendance = attendanceOpt.Some;
     const updatedAttendance = {
       ...attendance,
-      checkOutTime: new Date().toLocaleTimeString(),
+      checkOutTime: Some(new Date().toLocaleTimeString()),
     };
     attendancesStorage.insert(attendance.id, updatedAttendance);
     return Ok({
@@ -319,9 +321,14 @@ export default Canister({
           NotFound: `employee with id=${payload.employeeId} not found`,
         });
       }
+      const date = new Date();
       // Create a payroll with a unique id generated using UUID v4
       const payroll = {
         id: uuidv4(),
+        month: date.getFullYear().toString(),
+        year: date.getMonth().toString(),
+        date: date.toISOString(),
+        netSalary: payload.basicSalary + payload.allowances,
         ...payload,
       };
       // Insert the payroll into the payrollsStorage

@@ -14,6 +14,12 @@ const Payroll = ({ payroll }) => {
     netSalary,
   } = payroll;
 
+  const intBasicSalary = Number(basicSalary);
+  const intAllowances = Number(allowances);
+  const intNetSalary = Number(netSalary);
+
+  console.log(payroll);
+
   return (
     <Col key={id}>
       <Card className=" h-100">
@@ -30,13 +36,15 @@ const Payroll = ({ payroll }) => {
           <Card.Text className="flex-grow-1 ">year: {year}</Card.Text>
           <Card.Text className="flex-grow-1 ">month: {month}</Card.Text>
           <Card.Text className="flex-grow-1 ">
-            basicSalary: {basicSalary}
+            basicSalary: {intBasicSalary}
           </Card.Text>
           <Card.Text className="flex-grow-1 ">
-            allowances: {allowances}
+            allowances: {intAllowances}
           </Card.Text>
           <hr />
-          <Card.Text className="flex-grow-1 ">netSalary: {netSalary}</Card.Text>
+          <Card.Text className="flex-grow-1 ">
+            netSalary: {intNetSalary}
+          </Card.Text>
         </Card.Body>
       </Card>
     </Col>

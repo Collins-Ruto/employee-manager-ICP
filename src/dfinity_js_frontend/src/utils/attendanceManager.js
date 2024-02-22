@@ -17,7 +17,7 @@ export async function checkoutAttendance(attendanceId) {
 
 export async function getAttendances() {
   try {
-    return await window.canister.employeeManager.getAttendances();
+    return await window.canister.employeeManager.getAllAttendances();
   } catch (err) {
     if (err.name === "AgentHTTPResponseError") {
       const authClient = window.auth.client;

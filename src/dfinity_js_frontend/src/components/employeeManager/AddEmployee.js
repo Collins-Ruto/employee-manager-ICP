@@ -9,9 +9,17 @@ const AddEmployee = ({ save }) => {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [salary, setSalary] = useState("");
+  const [profileImg, setProfileImg] = useState("");
   const [designation, setDesignation] = useState(0);
   const isFormFilled = () =>
-    name && email && phone && address && department && designation && salary;
+    name &&
+    email &&
+    phone &&
+    address &&
+    department &&
+    designation &&
+    salary &&
+    profileImg;
 
   const [show, setShow] = useState(false);
 
@@ -48,15 +56,28 @@ const AddEmployee = ({ save }) => {
               />
             </FloatingLabel>
             <FloatingLabel
-              controlId="inputUrl"
-              label="Image URL"
+              controlId="inputAddress"
+              label="Address"
               className="mb-3"
             >
               <Form.Control
                 type="text"
-                placeholder="Image URL"
+                placeholder="Address"
                 onChange={(e) => {
                   setAddress(e.target.value);
+                }}
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              controlId="inputUrl"
+              label="Profile Image"
+              className="mb-3"
+            >
+              <Form.Control
+                type="text"
+                placeholder="Profile Image"
+                onChange={(e) => {
+                  setProfileImg(e.target.value);
                 }}
               />
             </FloatingLabel>
@@ -92,24 +113,10 @@ const AddEmployee = ({ save }) => {
               className="mb-3"
             >
               <Form.Control
-                as="text"
+                type="text"
                 placeholder="department"
-                style={{ height: "80px" }}
                 onChange={(e) => {
                   setDepartment(e.target.value);
-                }}
-              />
-            </FloatingLabel>
-            <FloatingLabel
-              controlId="inputSalary"
-              label="Salary"
-              className="mb-3"
-            >
-              <Form.Control
-                type="number"
-                placeholder="Salary"
-                onChange={(e) => {
-                  setSalary(e.target.value);
                 }}
               />
             </FloatingLabel>
@@ -123,6 +130,19 @@ const AddEmployee = ({ save }) => {
                 placeholder="designation"
                 onChange={(e) => {
                   setDesignation(e.target.value);
+                }}
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              controlId="inputSalary"
+              label="Salary"
+              className="mb-3"
+            >
+              <Form.Control
+                type="number"
+                placeholder="Salary"
+                onChange={(e) => {
+                  setSalary(e.target.value);
                 }}
               />
             </FloatingLabel>
@@ -140,6 +160,7 @@ const AddEmployee = ({ save }) => {
                 name,
                 email,
                 phone,
+                profileImg,
                 address,
                 department,
                 designation,

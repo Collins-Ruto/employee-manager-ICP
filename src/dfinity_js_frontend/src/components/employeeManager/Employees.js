@@ -10,9 +10,10 @@ import { NotificationSuccess, NotificationError } from "../utils/Notifications";
 import {
   getEmployees as getEmployeeList,
   createEmployee,
-  reserveEmployee,
   updateEmployee,
+  payEmployee,
 } from "../../utils/employeeManager";
+import { checkinAttendance } from "../../utils/attendanceManager";
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
@@ -33,8 +34,7 @@ const Employees = () => {
   const addEmployee = async (data) => {
     try {
       setLoading(true);
-      const maxSlotsStr = data.maxSlots;
-      data.maxSlots = parseInt(maxSlotsStr, 10) * 10 ** 8;
+      data.salary = parseInt(data.salary, 10);
       createEmployee(data).then((resp) => {
         getEmployees();
         toast(<NotificationSuccess text="Employee added successfully." />);
@@ -51,7 +51,7 @@ const Employees = () => {
     try {
       setLoading(true);
       checkinAttendance(data).then((resp) => {
-        getAttendances();
+        getEmployees();
       });
       toast(<NotificationSuccess text="Attendance added successfully." />);
     } catch (error) {
@@ -62,11 +62,27 @@ const Employees = () => {
     }
   };
 
+  const pay = async (data) => {
+    try {
+      setLoading(true);
+      data.basicSalary = parseInt(data.basicSalary, 10);
+      data.allowances = parseInt(data.allowances, 10);
+      payEmployee(data).then((resp) => {
+        getEmployees();
+        toast(<NotificationSuccess text="Employee added successfully." />);
+      });
+    } catch (error) {
+      console.log({ error });
+      toast(<NotificationError text="Failed to create a employee." />);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const update = async (data) => {
     try {
       setLoading(true);
-      const maxSlotsStr = data.maxSlots;
-      data.maxSlots = parseInt(maxSlotsStr, 10) * 10 ** 8;
+      data.salary = parseInt(data.salary, 10);
       updateEmployee(data).then((resp) => {
         getEmployees();
         toast(<NotificationSuccess text="Employee added successfully." />);
@@ -109,6 +125,7 @@ const Employees = () => {
                 }}
                 checkin={checkin}
                 update={update}
+                pay={pay}
               />
             ))}
           </Row>

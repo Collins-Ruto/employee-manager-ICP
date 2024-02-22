@@ -1,10 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Card, Col, Stack } from "react-bootstrap";
+import { Card, Col, Stack, Button } from "react-bootstrap";
 
 const Attendance = ({ attendance, checkout }) => {
   const { id, employeeId, date, checkInTime, checkOutTime, employeeName } =
     attendance;
+
+  console.log(attendance);
 
   return (
     <Col key={id}>
@@ -14,10 +16,10 @@ const Attendance = ({ attendance, checkout }) => {
             <Card.Title>Name: {employeeName}</Card.Title>
           </Stack>
           <Card.Text>Id: {id}</Card.Text>
-          <Card.Text className="flex-grow-1 ">Date: {date}</Card.Text>
           <Card.Text className="flex-grow-1 ">
             employeeId: {employeeId}
           </Card.Text>
+          <Card.Text className="flex-grow-1 ">Date: {date}</Card.Text>
           <Card.Text className="flex-grow-1 ">
             checkInTime: {checkInTime}
           </Card.Text>
@@ -26,6 +28,7 @@ const Attendance = ({ attendance, checkout }) => {
           </Card.Text>
           <Button
             onClick={() => checkout(id)}
+            disabled={checkOutTime.length > 0}
             variant="dark"
             className="rounded-pill"
             // style={{ width: "38px" }}

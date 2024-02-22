@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
-import AddAttendance from "./AddAttendance";
 import Attendance from "./Attendance";
 import Loader from "../utils/Loader";
 import { Row } from "react-bootstrap";
 import { NotificationSuccess, NotificationError } from "../utils/Notifications";
 import {
   getAttendances as getAttendanceList,
-  createAttendance,
   checkoutAttendance,
 } from "../../utils/attendanceManager";
 import { Link } from "react-router-dom";
@@ -28,20 +26,7 @@ const Attendances = () => {
     }
   });
 
-  const addAttendance = async (data) => {
-    try {
-      setLoading(true);
-      createAttendance(data).then((resp) => {
-        getAttendances();
-      });
-      toast(<NotificationSuccess text="Attendance added successfully." />);
-    } catch (error) {
-      console.log({ error });
-      toast(<NotificationError text="Failed to create a attendance." />);
-    } finally {
-      setLoading(false);
-    }
-  };
+  console.log(attendances);
 
   const checkout = async (data) => {
     try {
@@ -74,10 +59,6 @@ const Attendances = () => {
             >
               Employees Page
             </Link>
-            <div className="d-flex align-items-center">
-              <div className="mr-8">Add Attendance</div>
-              <AddAttendance save={addAttendance} />
-            </div>
           </div>
           <Row xs={1} sm={2} lg={3} className="g-3  mb-5 g-xl-4 g-xxl-5">
             {attendances.map((_attendance, index) => (

@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, FloatingLabel, Stack } from "react-bootstrap";
+import PropTypes from "prop-types";
+import { Button, Stack, Modal, Form, FloatingLabel } from "react-bootstrap";
 
-const Update = ({ employee, save }) => {
-  const [description, setDescription] = useState(employee.description);
-  const [date, setDate] = useState(employee.date);
-  const [startTime, setStartTime] = useState(employee.startTime);
-  const [attachmentURL, setImage] = useState(employee.attachmentURL);
-  const [location, setLocation] = useState(employee.location);
-  const [maxSlots, setMaxSlots] = useState(employee.maxSlots / BigInt(10 ** 8));
+const UpdateEmployee = ({ employee, save }) => {
+  const [department, setDepartment] = useState(employee.department);
+  const [phone, setPhone] = useState(employee.phone);
+  const [email, setEmail] = useState(employee.email);
+  const [address, setAddress] = useState(employee.address);
+  const [designation, setDesignation] = useState(employee.designation);
+  const [salary, setSalary] = useState(Number(employee.salary));
+
   const isFormFilled = () =>
-    startTime && date && attachmentURL && description && maxSlots && location;
+    email && phone && address && department && designation && salary;
 
   const [show, setShow] = useState(false);
 
@@ -29,84 +31,87 @@ const Update = ({ employee, save }) => {
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Stack>
-            <Modal.Title>New Employee</Modal.Title>
+            <Modal.Title>New Event</Modal.Title>
             <span>you can leave blank for unchanged values</span>
           </Stack>
         </Modal.Header>
         <Form>
           <Modal.Body>
             <FloatingLabel
-              controlId="inputUrl"
-              label="Image URL"
+              controlId="inputAddress"
+              label="Address"
               className="mb-3"
             >
               <Form.Control
                 type="text"
-                placeholder="Image URL"
+                placeholder="Address"
                 onChange={(e) => {
-                  setImage(e.target.value);
-                }}
-              />
-            </FloatingLabel>
-            <FloatingLabel controlId="inputDate" label="Date" className="mb-3">
-              <Form.Control
-                type="date"
-                placeholder="Date"
-                onChange={(e) => {
-                  setDate(e.target.value);
+                  setAddress(e.target.value);
                 }}
               />
             </FloatingLabel>
             <FloatingLabel
-              controlId="inputTime"
-              label="Start Time"
-              className="mb-3"
-            >
-              <Form.Control
-                type="time"
-                placeholder="Start Time"
-                onChange={(e) => {
-                  setStartTime(e.target.value);
-                }}
-              />
-            </FloatingLabel>
-            <FloatingLabel
-              controlId="inputDescription"
-              label="Description"
-              className="mb-3"
-            >
-              <Form.Control
-                as="textarea"
-                placeholder="description"
-                style={{ height: "80px" }}
-                onChange={(e) => {
-                  setDescription(e.target.value);
-                }}
-              />
-            </FloatingLabel>
-            <FloatingLabel
-              controlId="inputLocation"
-              label="Location"
+              controlId="inputPhone"
+              label="Phone"
               className="mb-3"
             >
               <Form.Control
                 type="text"
-                placeholder="Location"
+                placeholder="Phone"
                 onChange={(e) => {
-                  setLocation(e.target.value);
+                  setPhone(e.target.value);
                 }}
               />
             </FloatingLabel>
             <FloatingLabel
-              controlId="inputMaxSlots"
-              label="maxSlots"
+              controlId="inputEmail"
+              label="Email"
+              className="mb-3"
+            >
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              controlId="inputDepartment"
+              label="Department"
+              className="mb-3"
+            >
+              <Form.Control
+                type="text"
+                placeholder="department"
+                onChange={(e) => {
+                  setDepartment(e.target.value);
+                }}
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              controlId="inputDesignation"
+              label="designation"
+              className="mb-3"
+            >
+              <Form.Control
+                type="text"
+                placeholder="designation"
+                onChange={(e) => {
+                  setDesignation(e.target.value);
+                }}
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              controlId="inputSalary"
+              label="Salary"
               className="mb-3"
             >
               <Form.Control
                 type="number"
-                placeholder="maxSlots"
+                placeholder="Salary"
                 onChange={(e) => {
-                  setMaxSlots(e.target.value);
+                  setSalary(e.target.value);
                 }}
               />
             </FloatingLabel>
@@ -121,18 +126,17 @@ const Update = ({ employee, save }) => {
             disabled={!isFormFilled()}
             onClick={() => {
               save({
-                id: employee.id,
-                description,
-                location,
-                startTime,
-                attachmentURL,
-                maxSlots,
-                date,
+                email,
+                phone,
+                address,
+                department,
+                designation,
+                salary,
               });
               handleClose();
             }}
           >
-            Save employee
+            Update employee
           </Button>
         </Modal.Footer>
       </Modal>
@@ -140,4 +144,8 @@ const Update = ({ employee, save }) => {
   );
 };
 
-export default Update;
+UpdateEmployee.propTypes = {
+  save: PropTypes.func.isRequired,
+};
+
+export default UpdateEmployee;

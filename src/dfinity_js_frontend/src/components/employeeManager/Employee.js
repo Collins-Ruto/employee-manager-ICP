@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Card, Col, Badge, Stack } from "react-bootstrap";
+import { Card, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import UpdateEmployee from "./UpdateEmployee";
+import AddPayroll from "./AddPayroll";
 
-const Employee = ({ employee, checkin }) => {
+const Employee = ({ employee, checkin, pay, update }) => {
   const {
     id,
     name,
@@ -17,7 +18,7 @@ const Employee = ({ employee, checkin }) => {
     hireDate,
   } = employee;
 
-  const intSalary = Number(salary / BigInt(10 ** 8));
+  const intSalary = Number(salary);
 
   return (
     <Col key={id}>
@@ -26,6 +27,7 @@ const Employee = ({ employee, checkin }) => {
           <span className="font-monospace text-secondary">{name}</span>
         </Card.Header>
         <UpdateEmployee employee={employee} save={update} />
+        <AddPayroll employee={employee} save={pay} />
         <div className=" ratio ratio-4x3">
           <img src={email} alt={name} style={{ objectFit: "cover" }} />
         </div>
