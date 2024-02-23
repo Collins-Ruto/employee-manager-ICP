@@ -1,3 +1,4 @@
+// Import necessary modules and libraries from the Azle framework and UUID for generating unique identifiers.
 import {
   query,
   update,
@@ -15,14 +16,10 @@ import {
   Result,
   Canister,
 } from "azle";
-// Importing UUID v4 for generating unique identifiers
 // @ts-ignore
 import { v4 as uuidv4 } from "uuid";
 
-/**
- * This type represents an employee that can be listed on an employee manager.
- * It contains basic properties needed to define an employee.
- */
+// Define record structure for an Employee
 const Employee = Record({
   id: text,
   name: text,
@@ -36,7 +33,7 @@ const Employee = Record({
   salary: nat64,
 });
 
-// Payload structure for creating an employee
+// Define payload structure for creating an employee
 const EmployeePayload = Record({
   name: text,
   email: text,
@@ -48,7 +45,7 @@ const EmployeePayload = Record({
   salary: nat64,
 });
 
-// Payload structure for updating an employee
+// Define payload structure for updating an employee
 const UpdateEmployeePayload = Record({
   id: text,
   email: text,
@@ -59,7 +56,7 @@ const UpdateEmployeePayload = Record({
   salary: nat64,
 });
 
-// Record structure representing Payroll Details
+// Define record structure for Payroll Details
 const Payroll = Record({
   id: text,
   employeeId: text,
@@ -71,14 +68,14 @@ const Payroll = Record({
   netSalary: nat64,
 });
 
-// Record structure representing Add Payroll Details
+// Define payload structure for adding Payroll Details
 const PayrollPayload = Record({
   employeeId: text,
   basicSalary: nat64,
   allowances: nat64,
 });
 
-// Structure representing a payslip
+// Define record structure for a Payslip
 const Payslip = Record({
   id: text,
   employeeId: text,
@@ -91,17 +88,17 @@ const Payslip = Record({
   netSalary: nat64,
 });
 
-// Structure representing a attendance
+// Define record structure for Attendance
 const Attendance = Record({
   id: text,
   employeeId: text,
   employeeName: text,
   date: text,
   checkInTime: text,
-  checkOutTime: Opt(text),
+  checkOutTime: Opt(text), // Optional field for check-out time
 });
 
-// Variant representing different error types
+// Define variant representing different error types
 const ErrorType = Variant({
   NotFound: text,
   InvalidPayload: text,
@@ -109,7 +106,7 @@ const ErrorType = Variant({
   PaymentCompleted: text,
 });
 
-// return type for the getEmployeeAnalysis function
+// Define record structure for Employee Analysis
 const EmployeeAnalysis = Record({
   employeeName: text,
   totalDays: text,
@@ -117,28 +114,12 @@ const EmployeeAnalysis = Record({
   absentDays: text,
 });
 
-/**
- * `employeesStorage` - a key-value data structure used to store employees by sellers.
- * {@link StableBTreeMap} is a self-balancing tree that acts as durable data storage across canister upgrades.
- * For this contract, `StableBTreeMap` is chosen for the following reasons:
- * - `insert`, `get`, and `remove` operations have constant time complexity (O(1)).
- * - Data stored in the map survives canister upgrades, unlike using HashMap where data is lost after an upgrade.
- *
- * Breakdown of the `StableBTreeMap(text, Employee)` data structure:
- * - The key of the map is an `employeeId`.
- * - The value in this map is an employee (`Employee`) related to a given key (`employeeId`).
- *
- * Constructor values:
- * 1) 0 - memory id where to initialize a map.
- * 2) 16 - maximum size of the key in bytes.
- * 3) 1024 - maximum size of the value in bytes.
- * Values 2 and 3 are not used directly in the constructor but are utilized by the Azle compiler during compile time.
- */
+// Initialize StableBTreeMap instances to store employees, payrolls, and attendance records.
 const employeesStorage = StableBTreeMap(0, text, Employee);
 const payrollsStorage = StableBTreeMap(1, text, Payroll);
 const attendancesStorage = StableBTreeMap(3, text, Attendance);
 
-// Exporting default Canister module
+// Export default Canister module
 export default Canister({
   // Function to add an employee
   addEmployee: update(
@@ -166,7 +147,7 @@ export default Canister({
     return employeesStorage.values();
   }),
 
-  // Function to retrieve a specific employee by id
+  // Function to retrieve a specific employee by ID
   getEmployee: query([text], Result(Employee, ErrorType), (id) => {
     const employeeOpt = employeesStorage.get(id);
     if ("None" in employeeOpt) {
@@ -175,7 +156,7 @@ export default Canister({
     return Ok(employeeOpt.Some);
   }),
 
-  // search employee by name
+  // Function to search for employees by name
   searchEmployee: query([text], Vec(Employee), (name) => {
     const employees = employeesStorage.values();
     return employees.filter((employee) =>
@@ -202,16 +183,16 @@ export default Canister({
     }
   ),
 
-  // Function to add a attendance
+  // Function to add an attendance record for an employee
   addAttendance: update([text], Result(Attendance, ErrorType), (employeeId) => {
-    // get the employee
+    // Get the employee
     const employeeOpt = employeesStorage.get(employeeId);
     // Check if the payload is a valid object
     if (!employeeId) {
       return Err({ NotFound: "invalid payload" });
     }
 
-    // Create a attendance with a unique id generated using UUID v4
+    // Create an attendance record with a unique id generated using UUID v4
     const attendance = {
       id: uuidv4(),
       date: new Date().toISOString(),
@@ -220,12 +201,12 @@ export default Canister({
       employeeName: employeeOpt.Some.name,
       employeeId,
     };
-    // Insert the attendance into the attendancesStorage
+    // Insert the attendance record into the attendancesStorage
     attendancesStorage.insert(attendance.id, attendance);
     return Ok(attendance);
   }),
 
-  // Function to update a attendance for check out
+  // Function to update an attendance record for check-out time
   updateAttendance: update([text], Result(Attendance, ErrorType), (id) => {
     const attendanceOpt = attendancesStorage.get(id);
     if ("None" in attendanceOpt) {
@@ -242,12 +223,12 @@ export default Canister({
     });
   }),
 
-  // Function to retrieve all attendances
+  // Function to retrieve all attendance records
   getAllAttendances: query([], Vec(Attendance), () => {
     return attendancesStorage.values();
   }),
 
-  // Function to retrieve a specific attendance by id
+  // Function to retrieve a specific attendance record by ID
   getAttendance: query([text], Result(Attendance, ErrorType), (id) => {
     const attendanceOpt = attendancesStorage.get(id);
     if ("None" in attendanceOpt) {
@@ -256,13 +237,13 @@ export default Canister({
     return Ok(attendanceOpt.Some);
   }),
 
-  // Function to retrieve a specific attendance by date
+  // Function to retrieve attendance records for a specific date
   getAttendanceByDate: query([text], Attendance, (date) => {
     const attendances = attendancesStorage.values();
     return attendances.filter((attendance) => attendance.date === date)[0];
   }),
 
-  // Function to retrieve attendances for an employees
+  // Function to retrieve attendance records for a specific employee
   getEmployeeAttendances: query([text], Vec(Attendance), (employeeId) => {
     const employeeOpt = employeesStorage.get(employeeId);
     if ("None" in employeeOpt) {
@@ -280,7 +261,7 @@ export default Canister({
       });
   }),
 
-  // get employee analysis based on attendance
+  // Function to perform analysis on employee attendance
   getEmployeeAnalysis: query(
     [text],
     Result(EmployeeAnalysis, ErrorType),
@@ -309,12 +290,12 @@ export default Canister({
     }
   ),
 
-  // Function to add a payroll
+  // Function to add payroll details for an employee
   addPayroll: update(
     [PayrollPayload],
     Result(Payslip, ErrorType),
     (payload) => {
-      // get the employee
+      // Get the employee
       const employeeOpt = employeesStorage.get(payload.employeeId);
       if ("None" in employeeOpt) {
         return Err({
@@ -322,7 +303,7 @@ export default Canister({
         });
       }
       const date = new Date();
-      // Create a payroll with a unique id generated using UUID v4
+      // Create a payroll record with a unique id generated using UUID v4
       const payroll = {
         id: uuidv4(),
         month: date.getFullYear().toString(),
@@ -331,7 +312,7 @@ export default Canister({
         netSalary: payload.basicSalary + payload.allowances,
         ...payload,
       };
-      // Insert the payroll into the payrollsStorage
+      // Insert the payroll record into the payrollsStorage
       payrollsStorage.insert(payroll.id, payroll);
       return Ok({
         employeeName: employeeOpt.Some.name,
@@ -340,12 +321,12 @@ export default Canister({
     }
   ),
 
-  // Function to retrieve all payrolls
+  // Function to retrieve all payroll records
   getAllPayrolls: query([], Vec(Payroll), () => {
     return payrollsStorage.values();
   }),
 
-  // Function to retrieve a specific payroll by id
+  // Function to retrieve a specific payroll record by ID
   getPayroll: query([text], Result(Payroll, ErrorType), (id) => {
     const payrollOpt = payrollsStorage.get(id);
     if ("None" in payrollOpt) {
@@ -354,26 +335,26 @@ export default Canister({
     return Ok(payrollOpt.Some);
   }),
 
-  // Function to retrieve payrolls for an employees
+  // Function to retrieve payroll records for a specific employee
   getEmployeePayrolls: query([text], Vec(Payroll), (employeeId) => {
     const payrolls = payrollsStorage.values();
     return payrolls.filter((payroll) => payroll.employeeId === employeeId);
   }),
 
-  // Function to retrieve a specific year payrolls
+  // Function to retrieve payroll records for a specific year
   getYearPayrolls: query([nat64], Vec(Payroll), (year) => {
     const payrolls = payrollsStorage.values();
     return payrolls.filter((payroll) => payroll.year === year);
   }),
 
-  // Function to retrieve a specific month payrolls
+  // Function to retrieve payroll records for a specific month
   getMonthPayrolls: query([text], Vec(Payroll), (month) => {
     const payrolls = payrollsStorage.values();
     return payrolls.filter((payroll) => payroll.month === month);
   }),
 });
 
-// A workaround to make the uuid package work with Azle
+// A workaround to make the UUID package work with Azle
 globalThis.crypto = {
   // @ts-ignore
   getRandomValues: () => {

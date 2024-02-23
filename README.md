@@ -1,73 +1,78 @@
-# ICP 201 Employee Management System
+# Event Manager Canister
 
-## Overview
+The Event Manager Canister is a backend system designed to manage events, users, and tickets within an application. It provides a set of functions for adding, retrieving, updating, and deleting events and users, as well as creating and managing tickets associated with events.
 
-This is a comprehensive system for managing employees, payrolls, and attendance interactions in a decentralized manner on the Internet Computer blockchain Typescript challenge 201. It includes features like employee creation, payroll purchase, payment verification, and attendance management, demonstrating the capabilities of smart contracts for real-world applications.
+## Features
 
-## Structure
+- **Event Management**: Add, retrieve, update, and delete events with properties such as title, description, date, location, and attachment URL.
+- **User Management**: Add, retrieve, update, and delete users with properties such as name, email, phone, and address.
+- **Ticket Management**: Create, retrieve, and manage tickets for events, including associating tickets with users.
 
-### 1. Data Structures
+## Usage
 
-- **Employee**: Represents an employee with properties like `id`, `title`, `description`, `date`, `startTime`, `attachmentURL`, `location`, `price`, `seller`, and `reservedAmount`.
-- **EmployeePayload**: Used for creating or updating an employee with necessary properties.
-- **Payroll**: Represents a payroll with properties like `id`, `employeeId`, `price`, and `attendanceId`.
-- **Attendance**: Represents a attendance with properties like `id`, `name`, `email`, `phone`, `address`, and `payrolls`.
-- **ErrorType**: Variant type representing different error scenarios.
+### Installation
 
-### 2. Storage
+To use the Event Manager Canister in your project, you can install it via npm:
 
-- `employeesStorage`: A `StableBTreeMap` to store employees by their IDs.
-- `persistedPayrolls`: A `StableBTreeMap` to store payrolls by seller's principal.
-- `employeePayrolls`: A `StableBTreeMap` to store payrolls by employee ID.
-- `attendancesStorage`: A `StableBTreeMap` to store attendances by their IDs.
+```bash
+npm install azle
+```
 
-### 3. Canister Functions
+### Importing
 
-- **Add Employee**: Adds a new employee to the system.
-- **Add Attendance**: Adds a new attendance to the system.
-- **Get Employees**: Retrieves all employees from storage.
-- **Get Payrolls**: Retrieves all payrolls from storage.
-- **Get Employee Payrolls**: Retrieves payrolls for a specific employee.
-- **Get Employee**: Retrieves an employee by its ID.
-- **Get Sold Payrolls**: Retrieves sold payrolls for a specific employee.
-- **Get Attendances**: Retrieves all attendances from storage.
-- **Get Attendance**: Retrieves a attendance by their ID.
-- **Update Employee**: Updates an existing employee.
-- **Update Attendance**: Updates an existing attendance.
-- **Delete Employee**: Deletes an employee by its ID.
-- **Create Payroll**: Creates a new payroll for an employee.
-- **Complete Purchase**: Completes a payroll purchase after verifying payment.
-- **Verify Payment**: Verifies payment for a payroll.
-- **Get Address From Principal**: Gets the address from a principal.
-- **Make Payment**: Initiates a payment to another principal.
+You can import the necessary functions and data structures from the "azle" library:
 
-### 4. Helper Functions
+```javascript
+import { query, update, text, Record, StableBTreeMap, Variant, Vec, Ok, Err, ic, Principal, nat64, Result, Canister } from "azle";
+```
 
-- **Hash**: Generates a hash code for correlation IDs.
-- **Generate Correlation ID**: Generates a correlation ID for payrolls.
-- **Discard By Timeout**: Automatically removes a payroll if not paid within a specified timeframe.
-- **Verify Payment Internal**: Verifies payment internally by checking transaction details.
+### Data Structures
 
-### 5. Dependencies
+The Event Manager Canister defines the following data structures:
 
-- Imports necessary modules from the `"azle"` and `"azle/canisters/ledger"` libraries.
-- Uses external libraries like `"hashcode"` and `"uuidv4"` for hash code generation and UUID generation, respectively.
+- **Event**: Represents an event with properties such as id, title, description, date, startTime, attachmentURL, location, seller, maxSlots, and reservedAmount.
+- **User**: Represents a user with properties id, name, email, phone, address, and tickets.
+- **Ticket**: Represents a ticket with properties id, eventId, and userId.
 
-### 6. Miscellaneous
+### Functions
 
-- Uses `globalThis.crypto` for generating random values, providing a workaround for UUID generation.
-- Utilizes various IC APIs like `ic.call`, `ic.setTimer`, and `ic.time` for blockchain interaction.
+#### Event Management
 
-### 7. Error Handling
+- **addEvent**: Add a new event to the system.
+- **getEvents**: Retrieve all events stored in the system.
+- **getEvent**: Retrieve a specific event by its ID.
+- **updateEvent**: Update an existing event with new information.
 
-- Functions return `Result` types to handle success or different error scenarios.
+#### User Management
 
-## Things to be explained in the course
+- **addUser**: Add a new user to the system.
+- **getUsers**: Retrieve all users stored in the system.
+- **getUser**: Retrieve a specific user by their ID.
+- **getUserEvents**: Retrieve events reserved by a specific user.
+- **updateUser**: Update an existing user with new information.
 
-1. What is Ledger? More details here: <https://internetcomputer.org/docs/current/developer-docs/integrations/ledger/>
-2. What is Internet Identity? More details here: <https://internetcomputer.org/internet-identity>
-3. What is Principal, Identity, Address? <https://internetcomputer.org/internet-identity> | <https://yumiemployeeManager.medium.com/whats-the-difference-between-principal-id-and-account-id-3c908afdc1f9>
-4. Canister-to-canister communication and how multi-canister development is done? <https://medium.com/icp-league/explore-backend-multi-canister-development-on-ic-680064b06320>
+#### Ticket Management
+
+- **createTicket**: Create a new ticket for an event and associate it with a user.
+- **getTickets**: Retrieve all tickets stored in the system.
+- **getEventTickets**: Retrieve tickets for a specific event.
+- **getUserTickets**: Retrieve tickets for a specific user.
+
+### Data Storage
+
+The Event Manager Canister uses `StableBTreeMap` data structures to store events, users, and tickets. This ensures data persistence across canister upgrades and provides efficient storage and retrieval operations.
+
+### Error Handling
+
+The system utilizes `Result` types to handle errors. Possible error types include NotFound, InvalidPayload, PaymentFailed, and PaymentCompleted.
+
+### UUID Workaround
+
+A workaround is provided to make the UUID package compatible with Azle. This enables the generation of unique identifiers for events, users, and tickets.
+
+## Contributing
+
+Contributions to the Event Manager Canister are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request on the GitHub repository.
 
 ## How to deploy canisters implemented in the course
 
@@ -76,10 +81,10 @@ This is a comprehensive system for managing employees, payrolls, and attendance 
 `./deploy-local-ledger.sh` - deploys a local Ledger canister. IC works differently when run locally so there is no default network token available and you have to deploy it yourself. Remember that it's not a token like ERC-20 in Ethereum, it's a native token for ICP, just deployed separately.
 This canister is described in the `dfx.json`:
 
-```markdown
+```json
  "ledger_canister": {
    "type": "custom",
-   "candid": "https://raw.githubattendancecontent.com/dfinity/ic/928caf66c35627efe407006230beee60ad38f090/rs/rosetta-api/icp_ledger/ledger.did",
+   "candid": "https://raw.githubusercontent.com/dfinity/ic/928caf66c35627efe407006230beee60ad38f090/rs/rosetta-api/icp_ledger/ledger.did",
    "wasm": "https://download.dfinity.systems/ic/928caf66c35627efe407006230beee60ad38f090/canisters/ledger-canister.wasm.gz",
    "remote": {
      "id": {
@@ -106,25 +111,24 @@ Transfer ICP:
 `dfx ledger transfer <ADDRESS>  --memo 0 --icp 100 --fee 0`
 where:
 
-- `--memo` is some correlation id that can be set to identify some particular transactions (we use that in the employeeManager canister).
+- `--memo` is some correlation id that can be set to identify some particular transactions (we use that in the marketplace canister).
 - `--icp` is the transfer amount
 - `--fee` is the transaction fee. In this case it's 0 because we make this transfer as the minter idenity thus this transaction is of type MINT, not TRANSFER.
-- `<ADDRESS>` is the address of the recipient. To get the address from the principal, you can use the helper function from the employeeManager canister - `getAddressFromPrincipal(principal: Principal)`, it can be called via the Candid UI.
+- `<ADDRESS>` is the address of the recipient. To get the address from the principal, you can use the helper function from the marketplace canister - `getAddressFromPrincipal(principal: Principal)`, it can be called via the Candid UI.
 
 ### Internet identity canister
 
 `dfx deploy internet_identity` - that is the canister that handles the authentication flow. Once it's deployed, the `js-agent` library will be talking to it to register identities. There is UI that acts as a wallet where you can select existing identities
 or create a new one.
 
-### employeeManager canister
+### Marketplace canister
 
-`dfx deploy dfinity_js_backend` - deploys the employeeManager canister where the business logic is implemented.
-Basically, it implements functions like add, view, update, delete, and buy employees + a set of helper functions.
+`dfx deploy dfinity_js_backend` - deploys the marketplace canister where the business logic is implemented.
+Basically, it implements functions like add, view, update, delete, and buy products + a set of helper functions.
 
 Do not forget to run `dfx generate dfinity_js_backend` anytime you add/remove functions in the canister or when you change the signatures.
 Otherwise, these changes won't be reflected in IDL's and won't work when called using the JS agent.
 
-### employeeManager frontend canister
+### Marketplace frontend canister
 
 `dfx deploy dfinity_js_frontend` - deployes the frontend app for the `dfinity_js_backend` canister on IC.
-# employee-manager-ICP
